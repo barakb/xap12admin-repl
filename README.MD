@@ -17,11 +17,11 @@ If you browse to `http://localhost:8090/v1/index.html` you will see a nice swagg
 ![host-with-container](images/swagger1.png) 
 
 You can try to hosts view, getting all hosts in the system, currently there should be only one host with no containers.
-![host-with-container](images/hosts-get.png)
+![hosts-get.png](images/hosts-get.png)
 
 To create a new container open the containers section and select the first Post (where the description is "Create a new container")
 Fill in the host param as show in the image and push the `try it out` button
-![host-with-container](images/create-container-on-host.png)
+![create-container-on-host](images/create-container-on-host.png)
 
 You can verify that a container was created by getting all hosts and see that you host has a container.
 ![host-with-container](images/host-with-container.png)
