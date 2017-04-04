@@ -14,7 +14,7 @@ replace `your-host-name` with your real host name.
 Now you are ready to run the system in local mode, to do that you should type './gs-agent.sh --manager-local' from a terminal that opened in XAP the `bin` directory 
 If you browse to `http://localhost:8090/v1/index.html` you will see a nice swagger page that describe the ADMIN REST API and let you try it.
  
-![host-with-container](images/swagger1.png) 
+![swagger1](images/swagger1.png)
 
 You can try to hosts view, getting all hosts in the system, currently there should be only one host with no containers.
 ![hosts-get.png](images/hosts-get.png)
