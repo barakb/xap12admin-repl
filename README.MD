@@ -44,7 +44,7 @@ This REPL has the following cool features:
 
 Lets start up the REPL and see how it work.
 
-Unzip the file [demo-repl.zip](https://raw.githubusercontent.com/barakb/xap12admin-repl/master/bin/demo-repl.zip)
+Unzip the file [demo-repl.zip](https://github.com/barakb/xap12admin-repl/raw/master/bin/demo-repl.zip)
 go into the directory where the file a`admin-repl.sh` is found and define the system environment `restUrl`  
  `export restUrl=<YOUR_REST_URL>` in my case `export restUrl=http://your-host-name:8090/v1` again replace `your-host-name` with your real host name.
  
