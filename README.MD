@@ -44,7 +44,7 @@ This REPL has the following cool features:
 
 Lets start up the REPL and see how it work.
 
-Unzip the file `demo-repl.zip`
+Unzip the file [demo-repl.zip](https://raw.githubusercontent.com/barakb/xap12admin-repl/master/bin/demo-repl.zip)
 go into the directory where the file a`admin-repl.sh` is found and define the system environment `restUrl`  
  `export restUrl=<YOUR_REST_URL>` in my case `export restUrl=http://your-host-name:8090/v1` again replace `your-host-name` with your real host name.
  
@@ -264,14 +264,10 @@ As it turn out you can and it is even easy, so lets do that.
        
  ```
  
-  
-  
- 
-   
-
-This is the script `example.sc` to run it use ``
-
-@Todo add shell command
+The shell we are using here is based on [Ammonite](http://www.lihaoyi.com/Ammonite) which means it is a real shell and not just a REPL.
+For example C-C does not exist it just stop the current execution you will need to hit the C-D to exit the shell.
+One more feature of the Ammonite shell is that It can be used to interact with the system for example ` ls.!` will return a Seq of the files in the current directory.
+This means that you can combine XAP admin commands with system command to write even more meaningful sscripts 
 
 
  
