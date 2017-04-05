@@ -17,13 +17,16 @@ If you browse to `http://localhost:8090/v1/index.html` you will see a nice swagg
 ![swagger1](images/swagger1.png)
 
 You can try to hosts view, getting all hosts in the system, currently there should be only one host with no containers.
+
 ![hosts-get.png](images/hosts-get.png)
 
 To create a new container open the containers section and select the first Post (where the description is "Create a new container")
 Fill in the host param as show in the image and push the `try it out` button
+
 ![create-container-on-host](images/create-container-on-host.png)
 
 You can verify that a container was created by getting all hosts and see that you host has a container.
+
 ![host-with-container](images/host-with-container.png)
 
 Using this REST API it is possible to manage the grid from annoyware using the language you choose.
@@ -163,8 +166,109 @@ starting containers done ArraySeq(barakbo-pcu~22820, barakbo-pcu~22858, barakbo-
 
 ```
 
-Simulary we can write a script that upload the processing unit sources and at the same time start containers.
+Similarly we can write a script that upload the processing unit sources and at the same time start containers.
 When all the download and the containers are ready, it deploy all the processing unit concurrently and wait for them to finish.
+
+We can combine REST commands in the following ways:
+
+1. sequentially one after another using flat and flatmap for example
+ 
+ For example given 2 container ids we wish to restart them one after another.
+ We can write the following code
+ 
+ ```Scala
+ 
+    // given the REPL primitive: restartContainer(id: String): Future[com.gigaspaces.rest.finagle.model.DeploymentInstanceContainer]
+    
+    def restart2(id1: String, id2: String): Future[(String, String)] = restartContainer(id1).flatMap(deployment1 => restartContainer(id2).map(deployment2 => (deployment1.id, deployment2.id)))
+    
+    // we can now call this function with ids of 2 containers to restart.
+    // since it returns future with a tuble of the containers id we can wait on the result with get.
+    // notice that we will get 2 new ids since the container id contains the process id and the process is new.
+    
+    restart2("barakbo-pcu~15380", "barakbo-pcu~15464").get
+    
+    > res6: (String, String) = ("barakbo-pcu~15932", "barakbo-pcu~16024")
+       
+ ```
+ 
+ We can write restar2 using Scala for comprehension.
+ 
+ ```Scala
+  
+     def restart2(id1: String, id2: String): Future[(String, String)] = for{
+        deployment1 <- restartContainer(id1)
+        deployment2 <- restartContainer(id2)
+     }yield(deployment1.id, deployment2.id)
+     
+  ```
+2. Or we can send all the action concurently (since the containers are not depend on each other) and wait for the results.
+ 
+ ```Scala
+  
+     
+     def restart2(id1: String, id2: String): Future[(String, String)] = {
+         val f1 = restartContainer(id1)
+         val f2 = restartContainer(id2)
+         f1.flatMap(deployment1 => f2.map(deployment2 => (deployment1.id, deployment2.id)))
+     }
+        
+  ```
+  This code should run at half time, try it out !
+  Again we can use scala for comprehension.
+  
+ ```Scala
+    
+       def restart2(id1: String, id2: String): Future[(String, String)] = {
+           val f1 = restartContainer(id1)
+           val f2 = restartContainer(id2)
+           for{
+             
+              deployment1 <- f1
+              deployment2 <- f2
+           }yield(deployment1.id, deployment2.id)
+       }
+       
+ ```
+Wait you say, this is nice but I don't have 2 containers I have a list of them, can I compose sequentially and parallel list of items ?
+As it turn out you can and it is even easy, so lets do that.
+
+ ```Scala
+       import com.gigaspaces.rest.finagle.model
+       
+       def restart(ids: Seq[String]): Future[Seq[String]] = {
+           val res : Future[Seq[DeploymentInstanceContainer]]  = Future.traverseSequentially(ids)(id => restartContainer(id))
+           res.map(seq => seq.map(_.id))
+       }
+       
+       // > http://barakbo-pcu:8090/v1@ restart(List("barakbo-pcu~17042", "barakbo-pcu~17122", "barakbo-pcu~15932", "barakbo-pcu~15539")).get 
+       // > res24: Seq[String] = Vector("barakbo-pcu~21669", "barakbo-pcu~21756", "barakbo-pcu~21845", "barakbo-pcu~21933")
+       
+ ```
+ 
+ And now do that concurrency, it will be faster. 
+
+```Scala
+       import com.gigaspaces.rest.finagle.model
+       
+       def restart(ids: Seq[String]): Future[Seq[String]] = {
+           val res : Future[Seq[DeploymentInstanceContainer]] = Future.collect(ids.map(restartContainer _))
+           res.map(seq => seq.map(_.id))
+       }
+       
+       // We can now restart all existing containers concurrently using: containers.flatMap(deployments => restart(deployments.map(_.id))) get
+       // containers returns Future[List[DeploymentInstanceContainer]]
+       // we flatmap on the future to the the list of deployment and than extract the ids and send them to restart.
+       
+       // > http://barakbo-pcu:8090/v1@ containers.flatMap(deployments => restart(deployments.map(_.id))) get 
+       // > res2: Seq[String] = ArraySeq("barakbo-pcu~27453", "barakbo-pcu~27418", "barakbo-pcu~27586", "barakbo-pcu~27409")
+       
+ ```
+ 
+  
+  
+ 
+   
 
 This is the script `example.sc` to run it use ``
 
