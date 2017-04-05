@@ -188,11 +188,11 @@ We can combine REST commands in the following ways:
     
     restart2("barakbo-pcu~15380", "barakbo-pcu~15464").get
     
-    > res6: (String, String) = ("barakbo-pcu~15932", "barakbo-pcu~16024")
+    // > res6: (String, String) = ("barakbo-pcu~15932", "barakbo-pcu~16024")
        
  ```
  
- We can write restar2 using Scala for comprehension.
+ We can write restart2 using Scala for comprehension.
  
  ```Scala
   
@@ -223,7 +223,6 @@ We can combine REST commands in the following ways:
            val f1 = restartContainer(id1)
            val f2 = restartContainer(id2)
            for{
-             
               deployment1 <- f1
               deployment2 <- f2
            }yield(deployment1.id, deployment2.id)
@@ -241,7 +240,7 @@ As it turn out you can and it is even easy, so lets do that.
            res.map(seq => seq.map(_.id))
        }
        
-       // > http://barakbo-pcu:8090/v1@ restart(List("barakbo-pcu~17042", "barakbo-pcu~17122", "barakbo-pcu~15932", "barakbo-pcu~15539")).get 
+       restart(List("barakbo-pcu~17042", "barakbo-pcu~17122", "barakbo-pcu~15932", "barakbo-pcu~15539")).get 
        // > res24: Seq[String] = Vector("barakbo-pcu~21669", "barakbo-pcu~21756", "barakbo-pcu~21845", "barakbo-pcu~21933")
        
  ```
@@ -260,7 +259,7 @@ As it turn out you can and it is even easy, so lets do that.
        // containers returns Future[List[DeploymentInstanceContainer]]
        // we flatmap on the future to the the list of deployment and than extract the ids and send them to restart.
        
-       // > http://barakbo-pcu:8090/v1@ containers.flatMap(deployments => restart(deployments.map(_.id))) get 
+       containers.flatMap(deployments => restart(deployments.map(_.id))) get 
        // > res2: Seq[String] = ArraySeq("barakbo-pcu~27453", "barakbo-pcu~27418", "barakbo-pcu~27586", "barakbo-pcu~27409")
        
  ```
