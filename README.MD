@@ -7,7 +7,7 @@ I will describe the REST functionality and at the end I will show how to use a S
 
 First we will need to download [XAP 12.1](https://www.gigaspaces.com/xap-download) you will need to have a version with the `REST Cloud-Native Orchestration`.
 Once you download and unpacked the zip.
-Next you will have to get license from the gigaspaces site once you have it you can put it in the file `xap-license.txt` in the dir that was created by the zip.
+Next you will have to get license from the GigaSpaces site once you have it you can put it in the file `xap-license.txt` in the dir that was created by the zip.
 
 Edit the file `setenv-overrides.sh`  add the line `export XAP_MANAGER_SERVERS=your-host-name`
 replace `your-host-name` with your real host name. 
@@ -33,12 +33,12 @@ Using this REST API it is possible to manage the grid from annoyware using the l
 It is possible to upload jars to the grid and then deploy processes using those jars.
 It is also possible to create instance of spaces on a node in the grid.
 
-One spesific client that Gigaspaces providing is the Admin REPL, it is a Scala based REPL that has the REST embedded as primitives commands.
+One spesific client that GigaSpaces providing is the Admin REPL, it is a Scala based REPL that has the REST embedded as primitives commands.
 This REPL has the following cool features:
 
-* It support autocomplete.
+* It supports autocomplete.
 * It is asynchronous by nature.
-* It provide Scala as a glue language for the REST primitives.
+* It provides Scala as a glue language for the REST primitives.
 * The command implemented in a way that it is very easy to compose command together.
 * It enable running batch scripts that are doing work against the system.
 
@@ -56,7 +56,7 @@ http://barakbo-pcu:8090/v1@ hosts
 res2: Future[List[Host]] = Promise@147296487(state=Transforming(List(),Promise@464349589(state=Transforming(List(<function1>),Promise@783042794(state=Transforming(List(<function1>),Promise@279707594(state=Transforming(List(<function1>),Future@2132041506(depth=2,parent=Promise@450962180(state=Transforming(List(<function1>, <function1>, <function1>),Promise@993116346(state=Transforming(List(<function1>),Future@1881654105(depth=1,parent=Promise@1545356473(state=Transforming(List(<function1>, <function1>),Promise@1845290909(state=Transforming(List(<function1>),Future@254677784(depth=1,parent=Promise@1587539421(state=Transforming(List(<function1>, <function1>),Future@1729841184(depth=1,parent=Promise@1688239445(state=Transforming(List(<function1>, <function1>),Future@984348334(depth=1,parent=Promise@1739251556(state=Transforming(List(<function1>, <function1>),Future@1951979433(depth=1,parent=Promise@1633309010(state=Transforming(List(<function1>, <function1>),Promise@1393373445(state=Transforming(List(<function1>),Promise@922136563(state=Transforming(List(<function1>),Promise@194100457(state=Interruptible(List(<function1>),<function1>))))))))))))))))))))))))))))))))))))
 ```
 
-Hoo what happen here ? since every REST command is asynchronous in the REPL it return a Scala future, we can wait on the future or add listener that will called when the future will be resolved.
+Hoo what happen here? since every REST command is asynchronous in the REPL it return a Scala future, we can wait on the future or add listener that will called when the future will be resolved.
 Lets start to wait on the future first:
 
 ```Bash
@@ -166,7 +166,7 @@ starting containers done ArraySeq(barakbo-pcu~22820, barakbo-pcu~22858, barakbo-
 
 ```
 
-Similarly we can write a script that upload the processing unit sources and at the same time start containers.
+Similarly we can write a script that uploads the processing unit sources and at the same time start containers.
 When all the download and the containers are ready, it deploy all the processing unit concurrently and wait for them to finish.
 
 We can combine REST commands in the following ways:
